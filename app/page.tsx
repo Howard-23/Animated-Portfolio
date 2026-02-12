@@ -345,7 +345,7 @@ export default function Home() {
               transition={{ delay: 0.4 }}
               className="font-[family-name:var(--font-cinzel)] text-base sm:text-xl md:text-2xl text-[#9932CC] mb-4 sm:mb-6 px-2"
             >
-              Front-End Developer & Virtual Assistant
+              Front-End Developer
             </motion.p>
 
             <motion.p
