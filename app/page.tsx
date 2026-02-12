@@ -8,7 +8,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { 
   Sparkles, 
-  Download,
+  Printer,
   Eye,
   Mail,
   Github,
@@ -27,8 +27,7 @@ import {
   Phone,
   MapPin,
   Menu,
-  X,
-  Printer
+  X
 } from "lucide-react";
 import { useState, useEffect, useRef } from "react";
 
@@ -36,29 +35,12 @@ export default function Home() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const mobileMenuRef = useRef<HTMLDivElement>(null);
 
-  // Close mobile menu when clicking outside
-  useEffect(() => {
-    function handleClickOutside(event: MouseEvent) {
-      if (mobileMenuRef.current && !mobileMenuRef.current.contains(event.target as Node)) {
-        setMobileMenuOpen(false);
-      }
-    }
-    
-    if (mobileMenuOpen) {
-      document.addEventListener('mousedown', handleClickOutside);
-    }
-    
-    return () => {
-      document.removeEventListener('mousedown', handleClickOutside);
-    };
-  }, [mobileMenuOpen]);
-
   const scrollToSection = (id: string) => {
     const element = document.getElementById(id);
     if (element) {
-      const headerOffset = 80;
+      const headerOffset = 80; // Account for fixed header (h-16 = 64px + padding)
       const elementPosition = element.getBoundingClientRect().top;
-      const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
+      const offsetPosition = elementPosition + window.scrollY - headerOffset;
       
       window.scrollTo({
         top: offsetPosition,
@@ -68,6 +50,23 @@ export default function Home() {
     setMobileMenuOpen(false);
   };
 
+  // Click outside to close mobile menu
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (mobileMenuRef.current && !mobileMenuRef.current.contains(event.target as Node)) {
+        setMobileMenuOpen(false);
+      }
+    };
+
+    if (mobileMenuOpen) {
+      document.addEventListener("mousedown", handleClickOutside);
+    }
+
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [mobileMenuOpen]);
+
   // Skill data with proficiency
   const skills = [
     { 
@@ -75,21 +74,21 @@ export default function Home() {
       proficiency: 90,
       icon: Code2,
       color: "#4169E1",
-      tags: ["Next.js", "React", "TypeScript", "Tailwind CSS", "HTML5/CSS3", "Framer Motion"]
+      tags: ["Next.js", "React", "TypeScript", "Tailwind CSS", "HTML/CSS", "C#"]
     },
     { 
       category: "Backend & Tools", 
       proficiency: 75,
       icon: Wrench,
       color: "#228B22",
-      tags: ["Node.js", "Git", "GitHub", "REST APIs"]
+      tags: ["Node.js", "Laravel", "MySQL/PstgreSQL"]
     },
     { 
       category: "E-Commerce", 
       proficiency: 85,
       icon: ShoppingCart,
       color: "#9932CC",
-      tags: ["Shopify Liquid", "Store Customization", "Product Management"]
+      tags: ["Shopify Liquid", "Store Customization"]
     },
     { 
       category: "Virtual Assistance", 
@@ -241,11 +240,11 @@ export default function Home() {
     }
   ];
 
-  // Handle print resume - opens CV page and triggers print
+  // Handle resume print - opens CV page in print mode
   const handlePrintResume = () => {
     const cvWindow = window.open('/cv', '_blank');
     if (cvWindow) {
-      // Wait for the page to load then trigger print
+      // Wait for the CV page to load, then trigger print
       cvWindow.onload = () => {
         setTimeout(() => {
           cvWindow.print();
@@ -503,13 +502,17 @@ export default function Home() {
 
           <GrimoireCard cloverCount={4} title="John Howard P. Garcia">
             <div className="grid md:grid-cols-[200px_1fr] gap-8 items-start">
-              {/* Profile Image Placeholder */}
+              {/* Profile Image */}
               <motion.div
                 whileHover={{ scale: 1.05 }}
                 className="w-32 h-32 sm:w-40 sm:h-40 mx-auto md:mx-0 rounded-full bg-gradient-to-br from-[#FFD700] to-[#FFA500] p-1"
               >
-                <div className="w-full h-full rounded-full bg-[#1a1a2e] flex items-center justify-center">
-                  <User className="w-12 h-12 sm:w-16 sm:h-16 text-[#FFD700]" />
+                <div className="w-full h-full rounded-full overflow-hidden bg-[#1a1a2e]">
+                  <img
+                    src="/profile.jpg"
+                    alt="John Howard P. Garcia"
+                    className="w-full h-full object-cover"
+                  />
                 </div>
               </motion.div>
 
@@ -878,7 +881,7 @@ export default function Home() {
                     type="text"
                     name="name"
                     required
-                    className="w-full px-3 sm:px-4 py-3 bg-[#0a0a0f] border border-[#FFD700]/20 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:border-[#FFD700]/50 focus:ring-1 focus:ring-[#FFD700]/30 transition-all text-base min-h-[44px]"
+                    className="w-full min-h-[44px] px-3 sm:px-4 py-3 bg-[#0a0a0f] border border-[#FFD700]/20 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:border-[#FFD700]/50 focus:ring-1 focus:ring-[#FFD700]/30 transition-all text-base"
                     placeholder="Your name"
                   />
                 </div>
@@ -890,7 +893,7 @@ export default function Home() {
                     type="email"
                     name="email"
                     required
-                    className="w-full px-3 sm:px-4 py-3 bg-[#0a0a0f] border border-[#FFD700]/20 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:border-[#FFD700]/50 focus:ring-1 focus:ring-[#FFD700]/30 transition-all text-base min-h-[44px]"
+                    className="w-full min-h-[44px] px-3 sm:px-4 py-3 bg-[#0a0a0f] border border-[#FFD700]/20 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:border-[#FFD700]/50 focus:ring-1 focus:ring-[#FFD700]/30 transition-all text-base"
                     placeholder="your@email.com"
                   />
                 </div>
@@ -903,7 +906,7 @@ export default function Home() {
                   type="text"
                   name="subject"
                   required
-                  className="w-full px-3 sm:px-4 py-3 bg-[#0a0a0f] border border-[#FFD700]/20 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:border-[#FFD700]/50 focus:ring-1 focus:ring-[#FFD700]/30 transition-all text-base min-h-[44px]"
+                  className="w-full min-h-[44px] px-3 sm:px-4 py-3 bg-[#0a0a0f] border border-[#FFD700]/20 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:border-[#FFD700]/50 focus:ring-1 focus:ring-[#FFD700]/30 transition-all text-base"
                   placeholder="Project Inquiry"
                 />
               </div>
@@ -915,7 +918,7 @@ export default function Home() {
                   name="message"
                   rows={4}
                   required
-                  className="w-full px-3 sm:px-4 py-3 bg-[#0a0a0f] border border-[#FFD700]/20 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:border-[#FFD700]/50 focus:ring-1 focus:ring-[#FFD700]/30 transition-all resize-none text-base min-h-[120px]"
+                  className="w-full min-h-[120px] px-3 sm:px-4 py-3 bg-[#0a0a0f] border border-[#FFD700]/20 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:border-[#FFD700]/50 focus:ring-1 focus:ring-[#FFD700]/30 transition-all resize-none text-base"
                   placeholder="Tell me about your project..."
                 />
               </div>
@@ -968,7 +971,7 @@ export default function Home() {
                 <button
                   key={item}
                   onClick={() => scrollToSection(item.toLowerCase())}
-                  className="text-xs sm:text-sm text-gray-500 hover:text-[#FFD700] transition-colors py-2 px-1 min-h-[44px]"
+                  className="text-sm text-gray-500 hover:text-[#FFD700] transition-colors py-2 px-1 min-h-[44px]"
                 >
                   {item}
                 </button>
