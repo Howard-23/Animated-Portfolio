@@ -27,15 +27,44 @@ import {
   Phone,
   MapPin,
   Menu,
-  X
+  X,
+  Printer
 } from "lucide-react";
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 
 export default function Home() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const mobileMenuRef = useRef<HTMLDivElement>(null);
+
+  // Close mobile menu when clicking outside
+  useEffect(() => {
+    function handleClickOutside(event: MouseEvent) {
+      if (mobileMenuRef.current && !mobileMenuRef.current.contains(event.target as Node)) {
+        setMobileMenuOpen(false);
+      }
+    }
+    
+    if (mobileMenuOpen) {
+      document.addEventListener('mousedown', handleClickOutside);
+    }
+    
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [mobileMenuOpen]);
 
   const scrollToSection = (id: string) => {
-    document.getElementById(id)?.scrollIntoView({ behavior: "smooth" });
+    const element = document.getElementById(id);
+    if (element) {
+      const headerOffset = 80;
+      const elementPosition = element.getBoundingClientRect().top;
+      const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
+      
+      window.scrollTo({
+        top: offsetPosition,
+        behavior: "smooth"
+      });
+    }
     setMobileMenuOpen(false);
   };
 
@@ -212,10 +241,17 @@ export default function Home() {
     }
   ];
 
-  // Handle resume download
-  const handleDownloadResume = () => {
-    // Create a simple PDF content or redirect to CV page for printing
-    window.open('/cv', '_blank');
+  // Handle print resume - opens CV page and triggers print
+  const handlePrintResume = () => {
+    const cvWindow = window.open('/cv', '_blank');
+    if (cvWindow) {
+      // Wait for the page to load then trigger print
+      cvWindow.onload = () => {
+        setTimeout(() => {
+          cvWindow.print();
+        }, 500);
+      };
+    }
   };
 
   // Handle contact form submission
@@ -287,6 +323,7 @@ export default function Home() {
         {/* Mobile Navigation Dropdown */}
         {mobileMenuOpen && (
           <motion.div
+            ref={mobileMenuRef}
             initial={{ opacity: 0, y: -10 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -10 }}
@@ -311,7 +348,7 @@ export default function Home() {
       <section id="hero" className="relative min-h-screen flex items-center justify-center pt-14 sm:pt-16">
         {/* Background Magic Circle */}
         <div className="absolute inset-0 flex items-center justify-center opacity-20 pointer-events-none px-4">
-          <div className="scale-50 sm:scale-75 md:scale-100">
+          <div className="w-[300px] h-[300px] sm:w-[450px] sm:h-[450px] md:w-[600px] md:h-[600px]">
             <MagicCircle size={600} />
           </div>
         </div>
@@ -367,11 +404,11 @@ export default function Home() {
               className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center items-center mb-8 w-full max-w-lg mx-auto px-4 sm:px-0"
             >
               <Button
-                onClick={handleDownloadResume}
+                onClick={handlePrintResume}
                 className="w-full sm:w-auto bg-gradient-to-r from-[#FFD700] to-[#FFA500] text-black font-[family-name:var(--font-cinzel)] font-semibold px-4 sm:px-6 py-3 sm:py-5 text-sm sm:text-base hover:shadow-[0_0_30px_rgba(255,215,0,0.5)] transition-all duration-300"
               >
-                <Download className="w-4 h-4 mr-2 flex-shrink-0" />
-                <span className="whitespace-nowrap">Download Resume</span>
+                <Printer className="w-4 h-4 mr-2 flex-shrink-0" />
+                <span className="whitespace-nowrap">Print Resume</span>
               </Button>
               <a 
                 href="/cv" 
@@ -633,7 +670,7 @@ export default function Home() {
                 <div className="absolute left-4 md:left-1/2 -translate-x-1/2 w-4 h-4 rounded-full bg-[#FFD700] border-4 border-[#0a0a0f] z-10" />
 
                 {/* Content */}
-                <div className={`ml-12 md:ml-0 md:w-[45%] ${index % 2 === 0 ? "md:text-right" : "md:text-left"}`}>
+                <div className={`ml-10 md:ml-0 md:w-[45%] ${index % 2 === 0 ? "md:text-right" : "md:text-left"}`}>
                   <GrimoireCard cloverCount={3}>
                     <div className={`flex flex-col ${index % 2 === 0 ? "md:items-end" : "md:items-start"}`}>
                       <span className="text-[#9932CC] text-xs sm:text-sm font-semibold mb-1">{exp.period}</span>
@@ -841,7 +878,7 @@ export default function Home() {
                     type="text"
                     name="name"
                     required
-                    className="w-full px-3 sm:px-4 py-2.5 sm:py-3 bg-[#0a0a0f] border border-[#FFD700]/20 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:border-[#FFD700]/50 focus:ring-1 focus:ring-[#FFD700]/30 transition-all text-sm"
+                    className="w-full px-3 sm:px-4 py-3 bg-[#0a0a0f] border border-[#FFD700]/20 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:border-[#FFD700]/50 focus:ring-1 focus:ring-[#FFD700]/30 transition-all text-base min-h-[44px]"
                     placeholder="Your name"
                   />
                 </div>
@@ -853,7 +890,7 @@ export default function Home() {
                     type="email"
                     name="email"
                     required
-                    className="w-full px-3 sm:px-4 py-2.5 sm:py-3 bg-[#0a0a0f] border border-[#FFD700]/20 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:border-[#FFD700]/50 focus:ring-1 focus:ring-[#FFD700]/30 transition-all text-sm"
+                    className="w-full px-3 sm:px-4 py-3 bg-[#0a0a0f] border border-[#FFD700]/20 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:border-[#FFD700]/50 focus:ring-1 focus:ring-[#FFD700]/30 transition-all text-base min-h-[44px]"
                     placeholder="your@email.com"
                   />
                 </div>
@@ -866,7 +903,7 @@ export default function Home() {
                   type="text"
                   name="subject"
                   required
-                  className="w-full px-3 sm:px-4 py-2.5 sm:py-3 bg-[#0a0a0f] border border-[#FFD700]/20 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:border-[#FFD700]/50 focus:ring-1 focus:ring-[#FFD700]/30 transition-all text-sm"
+                  className="w-full px-3 sm:px-4 py-3 bg-[#0a0a0f] border border-[#FFD700]/20 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:border-[#FFD700]/50 focus:ring-1 focus:ring-[#FFD700]/30 transition-all text-base min-h-[44px]"
                   placeholder="Project Inquiry"
                 />
               </div>
@@ -878,7 +915,7 @@ export default function Home() {
                   name="message"
                   rows={4}
                   required
-                  className="w-full px-3 sm:px-4 py-2.5 sm:py-3 bg-[#0a0a0f] border border-[#FFD700]/20 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:border-[#FFD700]/50 focus:ring-1 focus:ring-[#FFD700]/30 transition-all resize-none text-sm"
+                  className="w-full px-3 sm:px-4 py-3 bg-[#0a0a0f] border border-[#FFD700]/20 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:border-[#FFD700]/50 focus:ring-1 focus:ring-[#FFD700]/30 transition-all resize-none text-base min-h-[120px]"
                   placeholder="Tell me about your project..."
                 />
               </div>
@@ -926,12 +963,12 @@ export default function Home() {
                 JHG
               </span>
             </div>
-            <div className="flex flex-wrap justify-center gap-4 sm:gap-6">
+            <div className="flex flex-wrap justify-center gap-x-6 gap-y-3">
               {navItems.map((item) => (
                 <button
                   key={item}
                   onClick={() => scrollToSection(item.toLowerCase())}
-                  className="text-xs sm:text-sm text-gray-500 hover:text-[#FFD700] transition-colors"
+                  className="text-xs sm:text-sm text-gray-500 hover:text-[#FFD700] transition-colors py-2 px-1 min-h-[44px]"
                 >
                   {item}
                 </button>

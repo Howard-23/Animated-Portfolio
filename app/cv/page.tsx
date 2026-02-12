@@ -23,10 +23,28 @@ import {
   Share2,
   Globe
 } from "lucide-react";
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 
 export default function CVPage() {
   const [showShareMenu, setShowShareMenu] = useState(false);
+  const shareMenuRef = useRef<HTMLDivElement>(null);
+
+  // Close share menu when clicking outside
+  useEffect(() => {
+    function handleClickOutside(event: MouseEvent) {
+      if (shareMenuRef.current && !shareMenuRef.current.contains(event.target as Node)) {
+        setShowShareMenu(false);
+      }
+    }
+    
+    if (showShareMenu) {
+      document.addEventListener('mousedown', handleClickOutside);
+    }
+    
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [showShareMenu]);
 
   // Personal Info
   const personalInfo = {
@@ -239,7 +257,7 @@ export default function CVPage() {
             </a>
             
             <div className="flex items-center gap-2 sm:gap-3">
-              <div className="relative">
+              <div className="relative" ref={shareMenuRef}>
                 <Button
                   onClick={() => setShowShareMenu(!showShareMenu)}
                   variant="outline"
@@ -253,7 +271,7 @@ export default function CVPage() {
                   <motion.div
                     initial={{ opacity: 0, y: -10 }}
                     animate={{ opacity: 1, y: 0 }}
-                    className="absolute right-0 top-full mt-2 bg-[#12121a] border border-[#FFD700]/20 rounded-lg p-2 min-w-[150px] z-50"
+                    className="absolute right-0 top-full mt-2 bg-[#12121a] border border-[#FFD700]/20 rounded-lg p-2 min-w-[150px] z-50 max-w-[calc(100vw-2rem)]"
                   >
                     <button
                       onClick={() => { handleShare(); setShowShareMenu(false); }}
@@ -317,19 +335,18 @@ export default function CVPage() {
               Front-End Developer & Virtual Assistant
             </p>
             
-            <div className="flex flex-wrap justify-center gap-2 sm:gap-4 text-xs sm:text-sm text-gray-400">
-              <a href={`mailto:${personalInfo.email}`} className="flex items-center gap-1 hover:text-[#FFD700] transition-colors">
+            <div className="flex flex-col sm:flex-row sm:flex-wrap justify-center gap-2 sm:gap-4 text-xs sm:text-sm text-gray-400">
+              <a href={`mailto:${personalInfo.email}`} className="flex items-center justify-center gap-1 hover:text-[#FFD700] transition-colors">
                 <Mail className="w-3 h-3 sm:w-4 sm:h-4" />
-                <span className="hidden sm:inline">{personalInfo.email}</span>
-                <span className="sm:hidden">Email</span>
+                {personalInfo.email}
               </a>
               <span className="hidden sm:inline text-gray-600">|</span>
-              <a href={`tel:${personalInfo.phone}`} className="flex items-center gap-1 hover:text-[#FFD700] transition-colors">
+              <a href={`tel:${personalInfo.phone}`} className="flex items-center justify-center gap-1 hover:text-[#FFD700] transition-colors">
                 <Phone className="w-3 h-3 sm:w-4 sm:h-4" />
                 {personalInfo.phone}
               </a>
               <span className="hidden sm:inline text-gray-600">|</span>
-              <span className="flex items-center gap-1">
+              <span className="flex items-center justify-center gap-1">
                 <MapPin className="w-3 h-3 sm:w-4 sm:h-4" />
                 {personalInfo.location}
               </span>
@@ -472,7 +489,7 @@ export default function CVPage() {
           </h2>
           
           <div className="bg-[#12121a] rounded-lg border border-[#FFD700]/10 p-4 sm:p-5 print:border-gray-200 print:bg-white">
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
               <div>
                 <h4 className="text-xs sm:text-sm font-semibold text-gray-300 mb-3 uppercase tracking-wider print:text-gray-700">Frontend</h4>
                 <div className="flex flex-wrap gap-2">
@@ -581,19 +598,19 @@ export default function CVPage() {
                 )}
                 
                 <div className="flex flex-wrap items-center gap-3">
-                  <div className="flex flex-wrap gap-2">
+                  <div className="flex flex-wrap gap-2 flex-1">
                     {project.tags.map((tag) => (
                       <span key={tag} className="px-2 py-0.5 bg-[#1a1a2e] text-gray-400 text-xs rounded border border-white/5 print:bg-gray-100 print:text-gray-600 print:border-gray-200">
                         {tag}
                       </span>
                     ))}
                   </div>
-                  <div className="flex gap-3 ml-auto print:hidden">
+                  <div className="flex gap-3 sm:ml-auto print:hidden">
                     <a 
                       href={project.links.code}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="text-[#9932CC] text-xs sm:text-sm hover:text-[#FFD700] transition-colors flex items-center gap-1"
+                      className="text-[#9932CC] text-xs sm:text-sm hover:text-[#FFD700] transition-colors flex items-center gap-1 whitespace-nowrap"
                     >
                       View Code <ExternalLink className="w-3 h-3" />
                     </a>
@@ -601,7 +618,7 @@ export default function CVPage() {
                       href={project.links.demo}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="text-[#9932CC] text-xs sm:text-sm hover:text-[#FFD700] transition-colors flex items-center gap-1"
+                      className="text-[#9932CC] text-xs sm:text-sm hover:text-[#FFD700] transition-colors flex items-center gap-1 whitespace-nowrap"
                     >
                       Live Demo <ExternalLink className="w-3 h-3" />
                     </a>
