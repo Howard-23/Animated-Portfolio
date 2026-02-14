@@ -104,7 +104,7 @@ export default function Home() {
     {
       title: "Front-End Developer",
       company: "PrimeX Ventures",
-      period: "2025 – Present",
+      period: "2025 – 2026",
       type: "freelance",
       description: "Building responsive, modern web applications for clients using Next.js, React, and Tailwind CSS. Specializing in creating intuitive user interfaces and seamless user experiences.",
       achievements: [
