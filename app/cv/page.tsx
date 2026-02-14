@@ -61,7 +61,7 @@ export default function CVPage() {
     {
       title: "Front-End Developer",
       company: "PrimeX Ventures",
-      period: "2025 – Present",
+      period: "2025 – 2026",
       description: "Develop custom web applications and websites for clients using modern technologies. Focus on creating responsive, accessible, and performant user interfaces.",
       achievements: [
         "Build responsive web applications using Next.js, React, and TypeScript",
