@@ -208,6 +208,8 @@ export default function Home() {
       github: "https://github.com/Howard-23/Medi-Scan-Prescription-Scanner",
       liveUrl: "https://medi-scan-prescription-scanner.vercel.app/"
     },
+
+
     {
       title: "Task Management App",
       description: "A productivity application for managing tasks and projects. Features drag-and-drop organization, priority levels, and progress tracking to help users stay organized.",

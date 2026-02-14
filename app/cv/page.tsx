@@ -192,6 +192,12 @@ export default function CVPage() {
       links: { code: "https://github.com/Howard-23/Medi-Scan-Prescription-Scanner", demo: "https://medi-scan-prescription-scanner.vercel.app/" }
     },
     {
+      title: "Dental Management System",
+      description: "A comprehensive dental clinic management platform for scheduling appointments, managing patient records, and tracking treatments.",
+      tags: ["Next.js", "TypeScript", "Tailwind CSS"],
+      links: { code: "https://github.com/Howard-23/Dental-Management-System", demo: "https://dental-management-system-rose.vercel.app/" }
+    },
+    {
       title: "E-Commerce Dashboard",
       description: "A dashboard for managing online store operations with analytics, order tracking, and inventory management.",
       highlights: [
