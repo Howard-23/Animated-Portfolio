@@ -239,6 +239,15 @@ export default function Home() {
         "Designed mobile-first responsive layout",
         "Integrated with Shopify's native features and apps"
       ]
+    },
+    {
+      title: "Dental Management System",
+      description: "A comprehensive dental clinic management platform for scheduling appointments, managing patient records, and tracking treatments. Streamlines dental practice operations with an intuitive interface.",
+      icon: "🦷",
+      color: "#20B2AA",
+      tech: ["Next.js", "TypeScript", "Tailwind CSS"],
+      github: "https://github.com/Howard-23/Dental-Management-System",
+      liveUrl: "https://dental-management-system-rose.vercel.app/"
     }
   ];
 
